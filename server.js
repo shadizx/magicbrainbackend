@@ -4,7 +4,6 @@ const db = require('knex')({
     client: 'pg',
     connection: {
         host: 'postgresql-tapered-09678',
-        port: 5432,
         user: 'shadi',
         password: '',
         database: 'facerecog'
