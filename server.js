@@ -3,10 +3,10 @@ const bp = require('body-parser');
 const db = require('knex')({
     client: 'pg',
     connection: {
-        host: 'postgresql-tapered-09678',
-        user: 'shadi',
-        password: '',
-        database: 'facerecog'
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
     }
 });
 const bcrypt = require('bcrypt');
@@ -14,15 +14,15 @@ const cors = require("cors");
 const saltRounds = 10;
 
 const app = express();
-const corsOptions ={
-    origin:'*', 
-    credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200,
- }
- app.use(cors(corsOptions));
+const corsOptions = {
+    origin: '*',
+    credentials: true,            //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+}
+app.use(cors(corsOptions));
 app.use(bp.json());
 
-app.get('/', (req, res) => {res.send('Backend is running successfully!')});
+app.get('/', (req, res) => { res.send('Backend is running successfully!') });
 app.post('/signin', (req, res) => {
     db.select('email', 'hash').from('login')
         .where('email', '=', req.body.email)
