@@ -18,7 +18,7 @@ const app = express();
 app.use(cors());
 app.use(bp.json());
 
-
+app.get('/', (req, res) => {res.send('Backend is running successfully!')});
 app.post('/signin', (req, res) => {
     db.select('email', 'hash').from('login')
         .where('email', '=', req.body.email)
