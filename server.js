@@ -15,7 +15,12 @@ const cors = require("cors");
 const saltRounds = 10;
 
 const app = express();
-app.use(cors());
+const corsOptions ={
+    origin:'*', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200,
+ }
+ app.use(cors(corsOptions));
 app.use(bp.json());
 
 app.get('/', (req, res) => {res.send('Backend is running successfully!')});
