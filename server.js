@@ -42,7 +42,7 @@ app.post('/signin', (req, res) => {
         .catch(err => res.status(400).json('Wrong credentials'));
 })
 
-app.post('/register', (req, res) => {
+app.post('/signup', (req, res) => {
     const { email, name, password } = req.body;
     var validCheck = true;
 
@@ -77,7 +77,7 @@ app.post('/register', (req, res) => {
                 .then(trx.commit)
                 .catch(trx.rollback)
         })
-            .catch(err => res.status(400).json('Unable to register'));
+            .catch(err => console.log(err));
     }
 })
 
