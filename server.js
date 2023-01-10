@@ -1,14 +1,14 @@
 const express = require('express');
 const bp = require('body-parser');
-const db = require('knex')({
-    client: 'pg',
-    connection: {
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    }
-});
+// const db = require('knex')({
+//     client: 'pg',
+//     connection: {
+//         connectionString: process.env.DATABASE_URL,
+//         ssl: {
+//             rejectUnauthorized: false
+//         }
+//     }
+// });
 const bcrypt = require('bcrypt');
 const cors = require("cors");
 const saltRounds = 10;
@@ -24,61 +24,11 @@ app.use(bp.json());
 
 app.get('/', (req, res) => { res.send('Backend is running successfully!') });
 app.post('/signin', (req, res) => {
-    db.select('email', 'hash').from('login')
-        .where('email', '=', req.body.email)
-        .then(data => {
-            const validCred = bcrypt.compareSync(req.body.password, data[0].hash);
-            if (validCred) {
-                return db.select('*').from('users').where('email', '=', req.body.email)
-                    .then(user => {
-                        res.json(user[0])
-                    })
-                    .catch(err => res.status(400).json('Unable to get user'))
-            }
-            else {
-                res.status(400).json('Wrong credentials')
-            }
-        })
-        .catch(err => res.status(400).json('Wrong credentials'));
+    res.json("Found");
 })
 
 app.post('/signup', (req, res) => {
-    const { email, name, password } = req.body;
-    var validCheck = true;
-
-    // check if there already exists this email in db
-    db.select('email').from('login').where('email', '=', email)
-        .then(data => {
-            if (data.length == 1) {
-                validCheck = false;
-                res.status(400).json('User already exists');
-            }
-        });
-
-    const hash = bcrypt.hashSync(password, saltRounds);
-    if (validCheck == true) {
-        db.transaction(trx => {
-            trx('login').insert({
-                hash: hash,
-                email: email
-            })
-                .returning('email')
-                .then(loginEmail => {
-                    return trx('users')
-                        .returning('*')
-                        .insert({
-                            email: loginEmail[0].email,
-                            name: name,
-                            joined: new Date()
-                        }).then(user => {
-                            res.json(user);
-                        })
-                })
-                .then(trx.commit)
-                .catch(trx.rollback)
-        })
-            .catch(err => console.log(err));
-    }
+    res.json("Found");
 })
 
 app.get('/profile/:id', (req, res) => {
